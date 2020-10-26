@@ -1,1 +1,2 @@
 # efm-sr-proxy
+SR Proxy is a Spring Boot MVC application that integrates with [efm-service-registry](https://github.com/felleslosninger/efm-service-registry) using an OAuth 2.0 JWT Bearer Flow. It is an internal utility application for other projects that require service-registry integration.
