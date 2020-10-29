@@ -15,7 +15,7 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class WebClientServiceRegistryClient implements ServiceRegistryClient {
 
-    private static final long BLOCK_DURATION_IN_SECONDS = 30;
+    private static final long BLOCK_DURATION_IN_SECONDS = 30L;
 
     @Qualifier("ServiceRegistryWebClient")
     private final WebClient webClient;
