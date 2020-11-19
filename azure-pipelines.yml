@@ -1,0 +1,34 @@
+# Oppsett av automatisk bygg gjennom Azure pipelines
+# Alle tags bygges og publiseres til Azure Container Registry
+# - YAML-skjema https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema%2Cparameter-schema
+# - Innebygde variable https://docs.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml
+# - Innebygde tasks https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=azure-devops
+# - Maven task https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/maven?view=azure-devops
+# - Docker task https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/docker?view=azure-devops
+
+resources:
+  - repo: self
+
+trigger:
+  tags:
+    include:
+      - refs/tags/*
+
+steps:
+  - task: Maven@3
+    displayName: 'Maven package'
+    inputs:
+      goals: 'package'
+      publishJUnitResults: false
+      jdkVersionOption: 1.8
+  - task: Docker@2
+    displayName: 'Login to Azure Container Registry'
+    inputs:
+      command: 'login'
+      containerRegistry: 'prodacrPremium1'
+  - task: Docker@2
+    displayName: 'Docker build and push'
+    inputs:
+      command: 'buildAndPush'
+      repository: 'eformidling/efm-sr-proxy'
+      tags: $(Build.SourceBranchName)
