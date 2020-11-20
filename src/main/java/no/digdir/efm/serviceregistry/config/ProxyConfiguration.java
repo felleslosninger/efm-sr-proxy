@@ -8,6 +8,7 @@ import no.digdir.efm.serviceregistry.oauth2.JwtBearerOAuth2AuthorizedClientProvi
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.security.oauth2.client.*;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -16,6 +17,7 @@ import org.springframework.security.oauth2.client.web.reactive.function.client.S
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
+@EnableRetry
 @EnableConfigurationProperties(ClientConfigurationProperties.class)
 public class ProxyConfiguration {
 
