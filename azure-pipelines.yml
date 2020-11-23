@@ -31,6 +31,11 @@ steps:
     inputs:
       archiveFilePatterns: '$(maven.secureFilePath)'
       cleanDestinationFolder: false
+  - script: |
+    ls -l
+    ls -l /home/vsts/work/1/s
+    ls -l /home/vsts/work/1/s/apache-maven-3.6.3
+    ls -l /home/vsts/work/_temp
   - task: Bash@3
     displayName: 'Get maven project version'
     inputs:
