@@ -36,7 +36,7 @@ steps:
     inputs:
       targetType: inline
       script: |
-        'MAVEN_PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)'
+        'MAVEN_PROJECT_VERSION=$(./apache-maven-3.6.3/bin/mvn help:evaluate -Dexpression=project.version -q -DforceStdout)'
         'echo "##vso[task.setvariable variable=TAG]$MAVEN_PROJECT_VERSION"'
   - task: Cache@2
     displayName: Cache Maven local repo
