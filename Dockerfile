@@ -1,14 +1,21 @@
-FROM openjdk:8-jre-alpine
+FROM openjdk:8-jre-slim
 
-MAINTAINER Johannes Molland <johannes.molland@digdir.no>
+EXPOSE 8080
 
-RUN addgroup -S spring && adduser -S spring -G spring
-USER spring:spring
+ENV JAVA_OPTS="" \
+    APP_DIR=/var/lib/digdir/ \
+    APP_FILE_NAME=app.jar
+
+RUN addgroup --system --gid 1001 spring && adduser --system --uid 1001 --group spring
+# RUN chown -R spring:spring /opt
+# RUN mkdir /logs && chown -R spring:spring /logs
 
 ARG jarPath
-COPY ${jarPath} app.jar
+ADD --chown=spring:spring ${jarPath} ${APP_DIR}$APP_FILE_NAME
 
-ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /app.jar ${0} ${@}"]
+RUN chmod -R +x $APP_DIR
+USER spring
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar ${APP_DIR}$APP_FILE_NAME ${0} ${@}"]
 
 HEALTHCHECK --interval=30s --timeout=2s --retries=3 \
 CMD wget --no-verbose --tries=1 --spider "http://localhost:8080/actuator/health" || exit 1

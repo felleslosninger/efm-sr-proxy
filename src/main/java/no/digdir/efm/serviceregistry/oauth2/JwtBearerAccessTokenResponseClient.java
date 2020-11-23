@@ -16,6 +16,8 @@ import no.digdir.efm.serviceregistry.config.ClientConfigurationProperties;
 import no.digdir.efm.serviceregistry.keystore.KeystoreAccessor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2AuthorizationException;
@@ -52,6 +54,7 @@ public class JwtBearerAccessTokenResponseClient implements OAuth2AccessTokenResp
     private final JWSSigner jwsSigner;
 
     @Override
+    @Retryable(maxAttempts = 10, backoff = @Backoff(delay = 1000))
     public OAuth2AccessTokenResponse getTokenResponse(JwtBearerGrantRequest authorizationGrantRequest) {
         Assert.notNull(authorizationGrantRequest, "authorizationGrantRequest cannot be null");
         OidcTokenResponse tokenResponse = fetchToken(makeJwt());
