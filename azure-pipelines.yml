@@ -31,18 +31,13 @@ steps:
     inputs:
       archiveFilePatterns: '$(maven.secureFilePath)'
       cleanDestinationFolder: false
-  - script: |
-    'ls -l'
-    'ls -l /home/vsts/work/1/s'
-    'ls -l /home/vsts/work/1/s/apache-maven-3.6.3'
-    'ls -l /home/vsts/work/_temp'
   - task: Bash@3
     displayName: 'Get maven project version'
     inputs:
       targetType: inline
       script: |
         'sudo cat apache-maven-3.6.3/README.txt'
-        'MAVEN_PROJECT_VERSION=$(./apache-maven-3.6.3/bin/mvn help:evaluate -Dexpression=project.version -q -DforceStdout)'
+        'MAVEN_PROJECT_VERSION=$(/home/vsts/work/1/s/apache-maven-3.6.3/bin/mvn help:evaluate -Dexpression=project.version -q -DforceStdout)'
         'echo "##vso[task.setvariable variable=TAG]$MAVEN_PROJECT_VERSION"'
   - task: Cache@2
     displayName: Cache Maven local repo
