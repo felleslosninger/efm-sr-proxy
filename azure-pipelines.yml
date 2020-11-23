@@ -36,7 +36,6 @@ steps:
       script: |
         ls -1 $AGENT_BUILDDIRECTORY/s/apache-maven-3.6.3/bin
         cat $AGENT_BUILDDIRECTORY/s/apache-maven-3.6.3/*.txt
-        $AGENT_BUILDDIRECTORY/s/apache-maven-3.6.3/bin/mvn
         $AGENT_BUILDDIRECTORY/s/apache-maven-3.6.3/bin/mvn help:evaluate -Dexpression=project.version -q -DforceStdout
   - task: Bash@3
     displayName: 'Get maven project version'
