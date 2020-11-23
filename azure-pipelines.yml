@@ -34,8 +34,14 @@ steps:
   - task: CmdLine@2
     inputs:
       script: |
+        echo $AGENT_WORKFOLDER
         ls -1 $AGENT_WORKFOLDER
+        ls -1 $AGENT_WORKFOLDER/1
+        ls -1 $AGENT_WORKFOLDER/1/s
+        echo $AGENT_BUILDDIRECTORY
         ls -1 $AGENT_BUILDDIRECTORY
+        ls -1 $AGENT_BUILDDIRECTORY/s
+
   - task: Bash@3
     displayName: 'Get maven project version'
     inputs:
