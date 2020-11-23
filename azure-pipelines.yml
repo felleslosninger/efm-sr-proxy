@@ -2,11 +2,14 @@
 # Alle tags bygges og publiseres til Azure Container Registry
 # - YAML-skjema https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema%2Cparameter-schema
 # - Innebygde variable https://docs.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml
+# - Bruke variable https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=azure-devops&tabs=yaml%2Cbatch
 # - Caching https://docs.microsoft.com/en-us/azure/devops/pipelines/release/caching?view=azure-devops
 # - Innebygde tasks https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/?view=azure-devops
 # - Cache task https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/utility/cache?view=azure-devops
 # - Maven task https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/maven?view=azure-devops
 # - Docker task https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/docker?view=azure-devops
+# - Bash task https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/utility/bash?view=azure-devops
+# - Maven help:evaluate https://maven.apache.org/plugins/maven-help-plugin/evaluate-mojo.html
 
 trigger:
   tags:
@@ -15,9 +18,16 @@ trigger:
 
 variables:
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
-  MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
+  TAG: $(Build.SourceBranchName)
 
 steps:
+  - task: Bash@3
+    displayName: 'Get maven project version'
+    inputs:
+      targetType: inline
+      script: |
+        'MAVEN_PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)'
+        'echo "##vso[task.setvariable variable=TAG]$MAVEN_PROJECT_VERSION"'
   - task: Cache@2
     displayName: Cache Maven local repo
     inputs:
@@ -30,8 +40,7 @@ steps:
     displayName: 'Maven package'
     inputs:
       goals: 'package'
-      #publishJUnitResults: false
-      mavenOptions: '$(MAVEN_OPTS) -Dhttp.keepAlive=false -Dmaven.wagon.http.retryHandler.count=3'
+      mavenOptions: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER) -Dhttp.keepAlive=false -Dmaven.wagon.http.retryHandler.count=3'
       jdkVersionOption: 1.8
   - task: Docker@2
     displayName: 'Login to Azure Container Registry'
@@ -43,4 +52,4 @@ steps:
     inputs:
       command: 'buildAndPush'
       repository: 'eformidling/efm-sr-proxy'
-      tags: $(Build.SourceBranchName)
+      tags: $(TAG)
