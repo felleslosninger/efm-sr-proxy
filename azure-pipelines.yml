@@ -34,9 +34,8 @@ steps:
   - task: CmdLine@2
     inputs:
       script: |
-        call ls
-        call ls /home/vsts/work/1/s
-        call ls /home/vsts/work/1/apache-maven-3.6.3
+        ls -1 $AGENT_WORKFOLDER
+        ls -1 $AGENT_BUILDDIRECTORY
   - task: Bash@3
     displayName: 'Get maven project version'
     inputs:
