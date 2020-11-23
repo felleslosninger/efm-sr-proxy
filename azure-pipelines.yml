@@ -30,6 +30,7 @@ steps:
     displayName: 'Extract maven'
     inputs:
       archiveFilePatterns: '$(maven.secureFilePath)'
+      cleanDestinationFolder: false
   - task: Bash@3
     displayName: 'Get maven project version'
     inputs:
