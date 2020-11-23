@@ -29,7 +29,7 @@ steps:
   - task: ExtractFiles@1
     displayName: 'Extract maven'
     inputs:
-      archiveFilePatterns: '**/*.tar.gz'
+      archiveFilePatterns: '$(maven.secureFilePath)'
   - task: Bash@3
     displayName: 'Get maven project version'
     inputs:
