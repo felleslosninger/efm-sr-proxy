@@ -40,8 +40,9 @@ steps:
         ls -1 $AGENT_WORKFOLDER/1/s
         echo $AGENT_BUILDDIRECTORY
         ls -1 $AGENT_BUILDDIRECTORY
-        ls -1 $AGENT_BUILDDIRECTORY/s
-
+        ls -1 $AGENT_BUILDDIRECTORY/s/apache-maven-3.6.3
+        ls -1 $AGENT_BUILDDIRECTORY/s/apache-maven-3.6.3/bin
+        cat $AGENT_BUILDDIRECTORY/s/apache-maven-3.6.3/*.txt
   - task: Bash@3
     displayName: 'Get maven project version'
     inputs:
