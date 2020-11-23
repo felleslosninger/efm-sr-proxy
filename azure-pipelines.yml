@@ -21,6 +21,14 @@ variables:
   TAG: $(Build.SourceBranchName)
 
 steps:
+  - task: Bash@3
+    displayName: 'Get maven project version'
+    inputs:
+      targetType: inline
+      script: |
+        'curl https://mirrors.nav.ro/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz --output apache-maven-3.6.3-bin.tar.gz'
+        'MAVEN_PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)'
+        'echo "##vso[task.setvariable variable=TAG]$MAVEN_PROJECT_VERSION"'
   - task: Cache@2
     displayName: Cache Maven local repo
     inputs:
@@ -35,15 +43,6 @@ steps:
       goals: 'package'
       mavenOptions: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER) -Dhttp.keepAlive=false -Dmaven.wagon.http.retryHandler.count=3'
       jdkVersionOption: 1.8
-  - task: Bash@3
-    displayName: 'Get maven project version'
-    inputs:
-      targetType: inline
-      script: |
-        'which wget'
-        'which curl'
-        'MAVEN_PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)'
-        'echo "##vso[task.setvariable variable=TAG]$MAVEN_PROJECT_VERSION"'
   - task: Docker@2
     displayName: 'Login to Azure Container Registry'
     inputs:
