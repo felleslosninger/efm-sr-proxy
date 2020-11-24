@@ -22,22 +22,17 @@ variables:
 
 steps:
   - task: DownloadSecureFile@1
-    displayName: 'Download Maven'
+    displayName: Download Maven
     name: maven
     inputs:
-      secureFile: 'apache-maven-3.6.3-bin.tar.gz'
+      secureFile: apache-maven-3.6.3-bin.tar.gz
   - task: ExtractFiles@1
-    displayName: 'Extract maven'
+    displayName: Extract Maven
     inputs:
-      archiveFilePatterns: '$(maven.secureFilePath)'
+      archiveFilePatterns: $(maven.secureFilePath)
       cleanDestinationFolder: false
-  - task: CmdLine@2
-    inputs:
-      script: |
-        pwd
-        $AGENT_BUILDDIRECTORY/s/apache-maven-3.6.3/bin/mvn help:evaluate -Dexpression=project.version -q -DforceStdout
   - task: Bash@3
-    displayName: 'Get maven project version'
+    displayName: Get Maven project version
     inputs:
       targetType: inline
       script: |
@@ -46,30 +41,38 @@ steps:
         echo $AGENT_BUILDDIRECTORY
         echo $AGENT_WORKFOLDER
         $AGENT_BUILDDIRECTORY/s/apache-maven-3.6.3/bin/mvn help:evaluate -Dexpression=project.version -q -DforceStdout
-        'MAVEN_PROJECT_VERSION=$($AGENT_BUILDDIRECTORY/s/apache-maven-3.6.3/bin/mvn help:evaluate -Dexpression=project.version -q -DforceStdout)'
-        echo "##vso[task.setvariable variable=TAG]$MAVEN_PROJECT_VERSION"
+        apache-maven-3.6.3/bin/mvn help:evaluate -Dexpression=project.version -q -DforceStdout
+        MAVEN_PROJECT_VERSION=$($AGENT_BUILDDIRECTORY/s/apache-maven-3.6.3/bin/mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        echo '##vso[task.setvariable variable=TAG]$MAVEN_PROJECT_VERSION'
+  - task: Bash@3
+    displayName: Get Maven project version
+    inputs:
+      targetType: inline
+      script: |
+        echo '$(TAG)'
+        asdfasdf
   - task: Cache@2
     displayName: Cache Maven local repo
     inputs:
-      key: 'maven | "$(Agent.OS)" | **/pom.xml'
+      key: maven | "$(Agent.OS)" | **/pom.xml
       restoreKeys: |
         maven | "$(Agent.OS)"
         maven
       path: $(MAVEN_CACHE_FOLDER)
   - task: Maven@3
-    displayName: 'Maven package'
+    displayName: Maven package
     inputs:
-      goals: 'package'
-      mavenOptions: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER) -Dhttp.keepAlive=false -Dmaven.wagon.http.retryHandler.count=3'
+      goals: package
+      mavenOptions: -Dmaven.repo.local=$(MAVEN_CACHE_FOLDER) -Dhttp.keepAlive=false -Dmaven.wagon.http.retryHandler.count=3
       jdkVersionOption: 1.8
   - task: Docker@2
-    displayName: 'Login to Azure Container Registry'
+    displayName: Login to Azure Container Registry
     inputs:
-      command: 'login'
-      containerRegistry: 'prodacrPremium1'
+      command: login
+      containerRegistry: prodacrPremium1
   - task: Docker@2
-    displayName: 'Docker build and push'
+    displayName: Docker build and push
     inputs:
-      command: 'buildAndPush'
+      command: buildAndPush
       repository: 'eformidling/efm-sr-proxy'
       tags: $(TAG)
