@@ -11,7 +11,7 @@ RUN addgroup --system --gid 1001 spring && adduser --system --uid 1001 --group s
 # RUN mkdir /logs && chown -R spring:spring /logs
 
 ARG jarPath
-ADD --chown=spring:spring ${jarPath} ${APP_DIR}$APP_FILE_NAME
+ADD --chown=spring:spring target/app.jar ${APP_DIR}$APP_FILE_NAME
 
 RUN chmod -R +x $APP_DIR
 USER spring

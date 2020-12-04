@@ -17,8 +17,6 @@
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <docker.image.prefix>prodacrpremium1.azurecr.io/eformidling</docker.image.prefix>
-        <dockerfile.maven.plugin.version>1.4.13</dockerfile.maven.plugin.version>
         <commons.asic.version>0.9.3</commons.asic.version>
         <lombok.version>1.18.12</lombok.version>
         <guava.version>29.0-jre</guava.version>
@@ -26,11 +24,28 @@
 
     <repositories>
         <repository>
+            <id>MavenArtifactFeed</id>
+            <url>https://pkgs.dev.azure.com/dificloud/_packaging/MavenArtifactFeed/maven/v1</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
             <id>DIFI Move releases</id>
             <name>DIFI MOVE releases on Nexus</name>
             <url>https://beta-meldingsutveksling.difi.no/content/repositories/releases/</url>
         </repository>
     </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>MavenArtifactFeed</id>
+            <url>https://pkgs.dev.azure.com/dificloud/_packaging/MavenArtifactFeed/maven/v1</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
@@ -117,34 +132,11 @@
     </dependencies>
 
     <build>
+        <finalName>app</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>dockerfile-maven-plugin</artifactId>
-                <version>${dockerfile.maven.plugin.version}</version>
-                <configuration>
-                    <repository>${docker.image.prefix}/${project.artifactId}</repository>
-                    <buildArgs>
-                        <jarPath>target/${project.build.finalName}.jar</jarPath>
-                    </buildArgs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>default</id>
-                        <goals>
-                            <goal>build</goal>
-                            <goal>tag</goal>
-                            <goal>push</goal>
-                        </goals>
-                        <configuration>
-                            <tag>${project.version}</tag>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>pl.project13.maven</groupId>
