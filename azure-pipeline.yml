@@ -8,10 +8,7 @@ resources:
 extends:
   template: build-and-deploy-template.yml@efm-eproc-pipeline
   parameters:
-    includeDatetimeInTag: false
-    dockerRepository: eformidling/efm-sr-proxy
-    kubernetesManifestRepository: git://eformidling/eformidling
-    kubernetesManifestFile: sr-proxy/sr-proxy.yaml
+    environmentRepository: git://eformidling/eformidling
 
 trigger:
   batch: true
@@ -20,3 +17,5 @@ trigger:
       - development
       - release-*
       - master
+
+pr: none
