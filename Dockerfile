@@ -3,12 +3,10 @@ FROM openjdk:8-jre-slim
 EXPOSE 8080
 
 ENV JAVA_OPTS="" \
-    APP_DIR=/var/lib/digdir/ \
-    APP_FILE_NAME=app.jar
+    APP_DIR=/opt/digdir/ \
+    APP_FILE_NAME=sr-proxy.jar
 
 RUN addgroup --system --gid 1001 spring && adduser --system --uid 1001 --group spring
-# RUN chown -R spring:spring /opt
-# RUN mkdir /logs && chown -R spring:spring /logs
 
 ADD --chown=spring:spring target/app.jar ${APP_DIR}$APP_FILE_NAME
 
