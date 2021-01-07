@@ -4,6 +4,7 @@ resources:
       type: github
       name: felleslosninger/efm-eproc-pipeline
       endpoint: felleslosninger
+      ref: lock-docker-images
 
 extends:
   template: build-and-deploy-template.yml@efm-eproc-pipeline
