@@ -4,7 +4,6 @@ resources:
       type: github
       name: felleslosninger/efm-eproc-pipeline
       endpoint: felleslosninger
-      ref: support-running-tests-for-non-deploy-branches
 
 extends:
   template: build-and-deploy-template.yml@efm-eproc-pipeline
