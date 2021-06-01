@@ -23,7 +23,7 @@
     </properties>
 
     <repositories>
-        <repository>
+                <repository>
             <id>MavenArtifactFeed</id>
             <url>https://pkgs.dev.azure.com/dificloud/_packaging/MavenArtifactFeed/maven/v1</url>
             <releases>
@@ -32,11 +32,6 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-        </repository>
-        <repository>
-            <id>DIFI Move releases</id>
-            <name>DIFI MOVE releases on Nexus</name>
-            <url>https://beta-meldingsutveksling.difi.no/content/repositories/releases/</url>
         </repository>
     </repositories>
 
